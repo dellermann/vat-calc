@@ -60,6 +60,7 @@ class Calculator
       vat: 'V.A.T.'
       vatRate: 'Rate'
     point: '.'
+    precision: 2
     taxRates: [7, 19]
 
 
@@ -79,6 +80,63 @@ class Calculator
 
   #-- Non-public methods ------------------------
 
+  # Calculates either the net or gross value depending on the input values.
+  #
+  # @private
+  #
+  _calculate: ->
+    options = @options
+    point = options.point
+    precision = options.precision
+
+    input = @$input.val().replace(point, '.')
+    input = '0' unless input
+    input = parseFloat input
+    rate = parseFloat @$rates.val()
+
+    if @$netGrossSwitch.is ':checked'
+      v = 100.0 + rate
+      vat = rate * input / v
+      res = 100.0 * input / v
+    else
+      vat = input * rate / 100.0
+      res = input + vat
+
+    @$vat.text @_format vat
+    @$result.text @_format res
+
+    return
+
+  # Formats the given numeric value respecting the decimal point and precision
+  # from the options.
+  #
+  # @param [Number] value the given numeric value
+  # @return [String]      the formatted number
+  # @private
+  #
+  _format: (value) ->
+    options = @options
+    precision = options.precision
+
+    value = value.toFixed precision if precision >= 0
+    value.replace /\./, options.point
+
+  # Called if the toggle switch for net/gross values has been changed.  The
+  # method changes the label of the output field and calculates the result.
+  #
+  # @param [Event] event  any event data
+  # @private
+  #
+  _onChangeNetGross: (event) ->
+    $this = $(event.currentTarget)
+    $label = $this.parent()
+    if $this.is ':checked'
+      @$netGrossLabel.text $label.prev().text()
+    else
+      @$netGrossLabel.text $label.next().text()
+      
+    @_calculate()
+
   # Renders the Handlebars template that displays the calculator.
   #
   # @private
@@ -86,12 +144,22 @@ class Calculator
   _renderTemplate: ->
     html = Handlebars.templates['vat-calc']
       options: @options
-    @$element.empty()
+    $el = @$element.empty()
       .html(html)
-#      .on('click', '.jscalc-key', (event) => @_onClickKey event)
-#    $(window).on('keypress', (event) => @_onKeyPress event)
-#      .on('keydown', (event) => @_onKeyDown event)
-#      .on('keyup', (event) => @_onKeyUp())
+      .on('click', 'button', => @_calculate())
+      .on(
+        'change', '.vatcalc-net-gross-switch',
+        (event) => @_onChangeNetGross event
+      )
+      .on('change', '.vatcalc-vat-rates', => @_calculate())
+      .on('change keydown', '.vatcalc-input', => @_calculate())
+
+    @$input = $el.find '.vatcalc-input'
+    @$netGrossSwitch = $el.find '.vatcalc-net-gross-switch'
+    @$rates = $el.find '.vatcalc-vat-rates'
+    @$vat = $el.find '.vatcalc-vat'
+    @$netGrossLabel = $el.find '.vatcalc-net-gross-label'
+    @$result = $el.find '.vatcalc-result'
 
 
 Plugin = (option) ->
