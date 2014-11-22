@@ -37,16 +37,59 @@ $(".calculator").vatcalc();
 
 You can specify the following options when calling `vatcalc()`:
 
-* `point` (String). Specifies the locale-dependent character for the
+* `accessKeys` (Object).  Specifies access keys to quickly activate input
+  controls.  The followings keys are defined:
+  * `calculate` (String).  The access key for the "Calculate" button (default
+    is "c").
+  * `gross` (String).  The access key for the net/gross switch (default
+    is "g").
+  * `input` (String).  The access key to activate the input field (default
+    is "i").
+  * `net` (String).  The access key for the net/gross switch (default
+    is "n").
+  * `vatRate` (String).  The access key to activate the V.A.T rate selector
+    (default is "r").
+* `currency` (String).  The currency to use (default is "€").
+* `gross` (Boolean).  Whether or not gross is set per default (defaults to
+  `false`).
+* `labels` (Object).  Specifies localized labels for controls.  The followings
+  keys are defined:
+  * `calculate` (String).  The label for the "Calculate" button (default is
+    "Calculate").
+  * `gross` (String).  The label for gross (default is "Gross").
+  * `net` (String).  The label for net (default is "Net").
+  * `vat` (String).  The label for V.A.T (default is "V.A.T").
+  * `vatRate` (String).  The label for the V.A.T rates selector (default is
+    "Rate").
+* `precision` (Number).  The number of digits after the decimal point (default
+  is 2).
+* `point` (String).  Specifies the locale-dependent character for the
   decimal point (default is ".").
+* `taxRates` (Array).  An array of numbers representing the available tax rates
+  in the calculator (default is 7 and 19).
 
 ### Examples
 
 ```javascript
-$(".calculator").vatcalc();      // use default options
+$(".calculator").vatcalc();     // use default options
 $(".calculator").vatcalc({
-    point: ","
-});                             // use German notation
+    accessKeys: {
+      calculate: "r",
+      gross: "b",
+      input: "e",
+      net: "n",
+      vatRate: "s"
+    },                          // use German access keys
+    labels: {
+      calculate: "Berechnen",
+      gross: "Brutto",
+      net: "Netto",
+      vat: "MwSt.",
+      vatRate: "Satz"
+    },                          // use German labels
+    point: ",",                 // use German notation
+    taxRates: [5, 20]           // use 5% and 20% tax rates
+});
 ```
 
 ## Build <a name="Build"></a>

@@ -1,6 +1,6 @@
 {
   "name": "vat-calc",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A JavaScript V.A.T calculator",
   "keywords": [
     "calculator",

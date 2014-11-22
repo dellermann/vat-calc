@@ -57,7 +57,7 @@ class Calculator
       calculate: 'Calculate'
       gross: 'Gross'
       net: 'Net'
-      vat: 'V.A.T.'
+      vat: 'V.A.T'
       vatRate: 'Rate'
     point: '.'
     precision: 2
