@@ -2,7 +2,7 @@
 
   vat-calc.hbs
 
-  Copyright (c) 2014, Daniel Ellermann
+  Copyright (c) 2014-2016, Daniel Ellermann
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -10,10 +10,10 @@
   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   copies of the Software, and to permit persons to whom the Software is
   furnished to do so, subject to the following conditions:
- 
+
   The above copyright notice and this permission notice shall be included in
   all copies or substantial portions of the Software.
- 
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -68,22 +68,25 @@
     </div>
     <div class="form-group">
       <label class="col-xs-2 control-label">{{options.labels.vat}}</label>
-      <div class="col-xs-9">
-        <output class="form-control form-control-static vatcalc-vat"></output>
+      <div class="col-xs-10">
+        <div class="input-group">
+          <input type="text" class="form-control vatcalc-vat"
+            value="" disabled="disabled" />
+          <span class="input-group-addon">{{options.currency}}</span>
+        </div>
       </div>
-      <span class="col-xs-1 control-label">{{options.currency}}</span>
     </div>
     <div class="form-group">
       <label class="col-xs-2 control-label vatcalc-net-gross-label">
         {{#if options.gross}}{{options.labels.net}}{{else}}{{options.labels.gross}}{{/if}}
       </label>
-      <div class="col-xs-9">
-        <output class="form-control form-control-static vatcalc-result"
-          ></output>
+      <div class="col-xs-10">
+        <div class="input-group">
+          <input type="text" class="form-control vatcalc-result"
+            value="" disabled="disabled" />
+          <span class="input-group-addon">{{options.currency}}</span>
+        </div>
       </div>
-      <span class="col-xs-1 control-label">{{options.currency}}</span>
     </div>
   </div>
 </div>
-
-{{!-- vim:set ft=html: --}}
