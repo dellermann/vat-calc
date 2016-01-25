@@ -1,19 +1,19 @@
 ###
 
   vat-calc.coffee
- 
-  Copyright (c) 2014, Daniel Ellermann
- 
+
+  Copyright (c) 2014-2016, Daniel Ellermann
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   copies of the Software, and to permit persons to whom the Software is
   furnished to do so, subject to the following conditions:
- 
+
   The above copyright notice and this permission notice shall be included in
   all copies or substantial portions of the Software.
- 
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,21 +29,21 @@
 $ = jQuery
 
 
-# Class `Calculator` represents the client-side V.A.T calculator.
+# Class `VatCalculator` represents the client-side V.A.T calculator.
 #
 # @author   Daniel Ellermann
 # @version  0.9
 # @since    0.9
 #
-class Calculator
+class VatCalculator
 
   #-- Private variables -------------------------
 
   $ = jQuery
 
 
-  #-- Instance variables ------------------------
-  
+  #-- Fields ------------------------------------
+
   DEFAULT_OPTIONS =
     accessKeys:
       calculate: 'c'
@@ -65,14 +65,14 @@ class Calculator
 
 
   #-- Constructor -------------------------------
-  
+
   # Creates a new calculator within the given element.
   #
   # @param [Element] element  the given container element
   # @param [Object] options   any options that overwrite the default options
   #
   constructor: (element, options = {}) ->
-    @$element = $el = $(element)
+    @$element = $(element)
     @options = $.extend {}, DEFAULT_OPTIONS, options
 
     @_renderTemplate()
@@ -102,8 +102,8 @@ class Calculator
       vat = input * rate / 100.0
       res = input + vat
 
-    @$vat.text @_format vat
-    @$result.text @_format res
+    @$vat.val @_format vat
+    @$result.val @_format res
 
     return
 
@@ -134,7 +134,7 @@ class Calculator
       @$netGrossLabel.text $label.prev().text()
     else
       @$netGrossLabel.text $label.next().text()
-      
+
     @_calculate()
 
   # Renders the Handlebars template that displays the calculator.
@@ -144,15 +144,21 @@ class Calculator
   _renderTemplate: ->
     html = Handlebars.templates['vat-calc']
       options: @options
-    $el = @$element.empty()
+    $el = @$element
+      .empty()
       .html(html)
-      .on('click', 'button', => @_calculate())
-      .on(
-        'change', '.vatcalc-net-gross-switch',
-        (event) => @_onChangeNetGross event
+      .on('click', 'button', =>
+        @_calculate()
+
+        false
+      )
+      .on('click', (event) -> event.stopPropagation())
+      .on('change', '.vatcalc-net-gross-switch', (event) =>
+        @_onChangeNetGross event
       )
       .on('change', '.vatcalc-vat-rates', => @_calculate())
-      .on('change keydown', '.vatcalc-input', => @_calculate())
+      .on('change', '.vatcalc-input', => @_calculate())
+      .on('change keyup', '.vatcalc-input', => @_calculate())
 
     @$input = $el.find '.vatcalc-input'
     @$netGrossSwitch = $el.find '.vatcalc-net-gross-switch'
@@ -169,7 +175,7 @@ Plugin = (option) ->
     data = $this.data 'bs.vatcalc'
 
     unless data
-      $this.data 'bs.vatcalc', (data = new Calculator(this, args[0]))
+      $this.data 'bs.vatcalc', (data = new VatCalculator(this, args[0]))
 
 # @nodoc
 old = $.fn.vatcalc
@@ -177,10 +183,9 @@ old = $.fn.vatcalc
 # @nodoc
 $.fn.vatcalc = Plugin
 # @nodoc
-$.fn.vatcalc.Constructor = Calculator
+$.fn.vatcalc.Constructor = VatCalculator
 
 # @nodoc
 $.fn.vatcalc.noConflict = ->
   $.fn.vatcalc = old
   this
-

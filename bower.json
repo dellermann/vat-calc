@@ -1,6 +1,6 @@
 {
   "name": "vat-calc",
-  "version": "0.9.0",
+  "version": "0.9.2",
   "homepage": "https://github.com/dellermann/vat-calc",
   "authors": [
     "Daniel Ellermann <d.ellermann@amc-world.de>"
@@ -26,7 +26,7 @@
     "tests"
   ],
   "dependencies": {
-    "handlebars": "~2.0.0",
-    "bootstrap": "~3.3.1"
+    "handlebars": "~3.0.3",
+    "bootstrap": "~3.3.6"
   }
 }
