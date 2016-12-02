@@ -191,6 +191,3 @@ module.exports = (grunt) ->
     'copy:demo'
   ]
   grunt.registerTask 'docs', ['clean:docs', 'codo:docs', 'markdown:docs']
-
-# vim:set ts=2 sw=2 sts=2:
-
